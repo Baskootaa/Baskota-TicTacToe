@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BASKOTA X|O GAME</title>
+    
+    <link rel="icon" type="image/png" href="pictures/baskota_logo_circle.png">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="main.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+    <div class="main-layout">
+        
+        <aside class="sidebar" id="sidebar">
+            <div class="profile-box">
+                <div class="avatar-circle">M</div>
+                <h3>BASKOTA</h3>
+                <p>Mazen EL-Basyouny</p>
+                <small>Software Engineer</small>
+            </div>
+            
+            <nav class="side-menu">
+                <button class="menu-btn active" onclick="showSection('dashboard')" id="btn-dash">
+                    <i class="fas fa-chart-bar"></i> لوحة التحكم
+                </button>
+                <button class="menu-btn" onclick="showSection('game-area')" id="btn-game">
+                    <i class="fas fa-gamepad"></i> العب الآن
+                </button>
+                
+                <div class="line"></div>
+                
+                <button class="menu-btn reset" onclick="resetAllStats()">
+                    <i class="fas fa-trash-alt"></i> تصفير السجلات
+                </button>
+            </nav>
+        </aside>
+
+        <button class="menu-toggle" id="mobile-menu" aria-label="القائمة">
+            <div class="hamburger-icon">
+                <span></span>
+                <span></span>
+            </div>
+        </button>
+
+        <main class="content-area">
+            
+            <header class="top-nav">
+                <div class="logo-wrapper">
+                    <img src="pictures/baskota_logo_circle.png" class="header-logo" alt="Logo">
+                    <span>نظام BASKOTA الذكي</span>
+                </div>
+                <button id="theme-toggle" class="theme-btn" title="تبديل الوضع">
+                    <i class="fas fa-moon" id="theme-icon"></i>
+                </button>
+            </header>
+
+            <div class="viewport">
+                
+                <section id="dashboard" class="page-section">
+                    <div class="welcome-section">
+                        <div class="welcome-banner">
+                            <h1 id="welcome-text">مرحباً بك يا مازن</h1>
+                            <p>هنا يمكنك متابعة أدائك وتحدي خوارزميات الذكاء الاصطناعي المطورة.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-container">
+                        <h2 class="section-title">إحصائيات الأداء العام</h2>
+                        <div class="stats-row">
+                            <div class="card"><h4>انتصاراتك (X)</h4><p id="p-score">0</p></div>
+                            <div class="card"><h4>فوز (صديق)</h4><p id="f-score">0</p></div>
+                            <div class="card"><h4>فوز (AI)</h4><p id="ai-score">0</p></div>
+                            <div class="card"><h4>التعادلات</h4><p id="draws">0</p></div>
+                            <div class="card"><h4>إجمالي المباريات</h4><p id="total">0</p></div>
+                            <div class="card"><h4>نسبة الفوز</h4><p id="win-rate">0%</p></div>
+                        </div>
+                    </div>
+
+                    <div class="history-container">
+                        <h2 class="section-title">آخر المباريات (Match History)</h2>
+                        <div class="history-list" id="match-history">
+                            <p class="empty-msg">لا يوجد مباريات مسجلة بعد</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="game-area" class="page-section" style="display:none;">
+                    <div class="game-wrapper">
+                        
+                        <div class="game-modes">
+                            <button id="vs-cpu" class="mode-btn active" onclick="setMode('cpu')">ضد الكمبيوتر</button>
+                            <button id="vs-friend" class="mode-btn" onclick="setMode('friend')">ضد صديق</button>
+                        </div>
+
+                        <div class="difficulty-modes" id="difficulty-settings">
+                            <button id="diff-easy" class="diff-btn active" onclick="setDifficulty('easy')">سهل</button>
+                            <button id="diff-medium" class="diff-btn" onclick="setDifficulty('medium')">متوسط</button>
+                            <button id="diff-hard" class="diff-btn" onclick="setDifficulty('hard')" 
+                                    title="خوارزمية Minimax: لا يمكن هزيمته!">
+                                مستحيل 🔥
+                            </button>
+                        </div>
+
+                        <div class="current-match-info">
+                            <div class="player-label x-color">أنت (X)</div>
+                            <div class="vs-divider">VS</div>
+                            <div id="opponent-display" class="player-label o-color">الكمبيوتر (O)</div>
+                        </div>
+
+                        <div class="board" id="board">
+                            <div class="cell" data-index="0"></div>
+                            <div class="cell" data-index="1"></div>
+                            <div class="cell" data-index="2"></div>
+                            <div class="cell" data-index="3"></div>
+                            <div class="cell" data-index="4"></div>
+                            <div class="cell" data-index="5"></div>
+                            <div class="cell" data-index="6"></div>
+                            <div class="cell" data-index="7"></div>
+                            <div class="cell" data-index="8"></div>
+                        </div>
+
+                        <div class="game-controls">
+                            <button class="restart-btn" onclick="resetGame()">إعادة الجولة</button>
+                        </div>
+                    </div>
+                </section>
+                
+            </div>
+        </main>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

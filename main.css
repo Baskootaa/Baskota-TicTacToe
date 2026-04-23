@@ -1,0 +1,451 @@
+/* --- 1. المتغيرات والأساسيات (Variables & Reset) --- */
+:root {
+    --bg-main: #0e111d;
+    --bg-sidebar: #0b0e16;
+    --bg-gradient: radial-gradient(circle at top right, #161b33, #0e111d);
+    --text-primary: #ffffff;
+    --text-secondary: #aaaaaa;
+    --accent-color: #3498db;
+    --accent-hover: #2980b9;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --card-hover: rgba(255, 255, 255, 0.1);
+    --border-color: rgba(255, 255, 255, 0.1);
+    --win-green: #2ecc71;
+    --loss-red: #e74c3c;
+    --nav-bg: rgba(11, 14, 22, 0.8);
+    --tooltip-bg: rgba(20, 20, 30, 0.95);
+}
+
+[data-theme="light"] {
+    --bg-main: #f0f2f5;
+    --bg-sidebar: #ffffff;
+    --bg-gradient: radial-gradient(circle at top right, #e0e6ed, #f0f2f5);
+    --text-primary: #1a1a1b;
+    --text-secondary: #555555;
+    --card-bg: #ffffff;
+    --card-hover: #f9f9f9;
+    --border-color: #dddddd;
+    --accent-color: #2980b9;
+    --nav-bg: rgba(255, 255, 255, 0.85);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box !important;
+    outline: none;
+}
+
+body {
+    direction: rtl;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    transition: background 0.3s ease;
+}
+
+/* --- 2. الهيكل الرئيسي (Layout) --- */
+.main-layout {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    position: relative;
+}
+
+/* --- 3. السايدبار (Sidebar) --- */
+.sidebar {
+    width: 280px;
+    min-width: 280px;
+    height: 100vh;
+    background-color: var(--bg-sidebar);
+    border-left: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    padding: 40px 20px;
+    z-index: 1500;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.avatar-circle {
+    width: 80px;
+    height: 80px;
+    background: var(--accent-color);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: bold;
+    margin: 0 auto 15px;
+    box-shadow: 0 0 25px rgba(52, 152, 219, 0.3);
+}
+
+.profile-box { text-align: center; margin-bottom: 40px; }
+.profile-box h3 { font-size: 1.3rem; color: var(--text-primary); }
+.profile-box p { font-size: 0.9rem; color: var(--text-secondary); margin-top: 5px; }
+
+.side-menu { display: flex; flex-direction: column; gap: 10px; }
+
+.menu-btn {
+    background: var(--card-bg);
+    border: 1px solid transparent;
+    color: var(--text-secondary);
+    padding: 14px 18px;
+    border-radius: 12px;
+    text-align: right;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.menu-btn:hover, .menu-btn.active {
+    background: rgba(52, 152, 219, 0.15);
+    color: var(--accent-color);
+    border-color: rgba(52, 152, 219, 0.3);
+}
+
+.menu-btn.reset:hover {
+    color: var(--loss-red);
+    background: rgba(231, 76, 60, 0.1);
+    border-color: rgba(231, 76, 60, 0.3);
+}
+
+.line {
+    height: 1px;
+    background: var(--border-color);
+    margin: 10px 0;
+}
+
+/* --- 4. زر الهامبرجر (مخفي افتراضياً في اللاب توب) --- */
+.menu-toggle {
+    display: none; /* هذا السطر يضمن عدم ظهوره في الشاشات الكبيرة */
+}
+
+/* --- 5. ميديا كويري للموبايل والتاب (Mobile & Tablet) --- */
+@media (max-width: 1024px) {
+    .menu-toggle {
+        display: flex; /* يظهر فقط في الشاشات أقل من 1024px */
+        position: fixed;
+        top: 20px;
+        right: 25px;
+        width: 50px;
+        height: 50px;
+        background: var(--accent-color);
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        z-index: 10001;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .hamburger-icon {
+        width: 26px;
+        height: 20px;
+        position: relative;
+    }
+
+    .hamburger-icon span {
+        display: block;
+        position: absolute;
+        height: 3px;
+        width: 100%;
+        background-color: white;
+        border-radius: 10px;
+        transition: all 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+        /* نقطة الارتكاز جهة اليسار لتحقيق الشكل المطلوب */
+        transform-origin: 25% 50%;
+    }
+
+    .hamburger-icon span:nth-child(1) { top: 4px; }
+    .hamburger-icon span:nth-child(2) { bottom: 4px; }
+
+    /* تحول الخطوط لـ X عند فتح السايدبار في الموبايل */
+    .sidebar.open ~ .menu-toggle .hamburger-icon span:nth-child(1) {
+        top: 50%;
+        transform: translateY(-50%) rotate(35deg);
+    }
+
+    .sidebar.open ~ .menu-toggle .hamburger-icon span:nth-child(2) {
+        top: 50%;
+        transform: translateY(-50%) rotate(-35deg);
+    }
+
+    /* السايدبار في الموبايل يكون مخفي بالكامل في البداية */
+    .sidebar {
+        position: fixed;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        transform: translateX(100%);
+        z-index: 10000;
+        box-shadow: -5px 0 25px rgba(0,0,0,0.5);
+    }
+
+    .sidebar.open {
+        transform: translateX(0) !important;
+    }
+
+    .sidebar.open ~ .menu-toggle {
+        background: var(--bg-sidebar);
+        border: 1px solid var(--border-color);
+        box-shadow: none;
+    }
+}
+
+/* --- 6. منطقة المحتوى والناف بار (Content & Nav) --- */
+.content-area {
+    flex: 1;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    background: var(--bg-gradient);
+    position: relative;
+}
+
+.top-nav {
+    width: 100%;
+    min-height: 80px;
+    padding: 0 40px;
+    background: var(--nav-bg);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo-wrapper { display: flex; align-items: center; gap: 15px; }
+.header-logo { width: 45px !important; height: 45px !important; object-fit: contain; }
+
+.theme-btn {
+    position: absolute;
+    left: 40px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--accent-color);
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.theme-btn:hover { transform: scale(1.1); background: var(--accent-color); color: white; }
+
+/* --- 7. الإحصائيات (Stats Grid) --- */
+.viewport {
+    padding: 40px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.welcome-banner {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    padding: 35px;
+    border-radius: 24px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+}
+
+.section-title {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+    color: var(--text-primary);
+}
+
+.stats-row {
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 20px;
+    justify-content: center;
+}
+
+.card {
+    flex: 1;
+    min-width: 160px;
+    max-width: 200px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    padding: 25px 15px;
+    border-radius: 20px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    border-color: var(--accent-color);
+    background: var(--card-hover);
+}
+
+.card h4 { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px; }
+.card p { font-size: 1.6rem; font-weight: 800; color: var(--text-primary); }
+
+/* --- 8. سجل المباريات (Match History Cards) --- */
+.history-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.history-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    margin-bottom: 15px;
+    padding: 18px 30px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(5px);
+    transition: 0.3s;
+}
+
+.history-item.win { border-right: 5px solid var(--win-green); }
+.history-item.loss { border-right: 5px solid var(--loss-red); }
+.history-item.draw { border-right: 5px solid var(--text-secondary); }
+
+.history-item:hover { background: var(--card-hover); transform: scale(1.01); }
+
+.match-info-text { font-weight: 600; color: var(--text-primary); font-size: 1.05rem; }
+.match-date-text { color: var(--text-secondary); font-size: 0.9rem; }
+
+/* --- 9. منطقة اللعبة (Game Area UI) --- */
+.game-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+}
+
+.game-modes, .difficulty-modes {
+    display: flex;
+    gap: 15px;
+    background: rgba(0,0,0,0.1);
+    padding: 8px;
+    border-radius: 15px;
+}
+
+.mode-btn, .diff-btn {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 12px 24px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+    position: relative;
+}
+
+.mode-btn.active, .diff-btn.active {
+    background: var(--accent-color);
+    color: white;
+    border-color: var(--accent-color);
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+#diff-hard.active {
+    background: var(--loss-red);
+    border-color: var(--loss-red);
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+}
+
+.diff-btn[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--tooltip-bg);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    z-index: 2000;
+    border: 1px solid var(--accent-color);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+    opacity: 1;
+    visibility: visible;
+    transition: 0s !important; 
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 110px);
+    gap: 15px;
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 25px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.cell {
+    width: 110px;
+    height: 110px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.8rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+    color: var(--text-primary);
+}
+
+.cell.x-color { color: var(--accent-color); }
+.cell.o-color { color: var(--loss-red); }
+
+.cell:hover { background: var(--card-hover); }
+.cell.win { background: rgba(46, 204, 113, 0.25); color: var(--win-green); border-color: var(--win-green); }
+
+.restart-btn {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 15px 50px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 5px 20px rgba(52, 152, 219, 0.3);
+}
+
+.restart-btn:hover { transform: scale(1.05); background: var(--accent-hover); }
+
+/* --- 10. Scrollbar --- */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
