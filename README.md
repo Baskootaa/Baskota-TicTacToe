@@ -9,7 +9,7 @@ This project is an implementation of a Tic-Tac-Toe game using an intelligent age
 * **Environment Analysis (ODESA):** Fully Observable, Strategic, Sequential, and Static.
 
 ## 3. Project Structure
-* **main.html:** The main game interface and dashboard.
+* **index.html:** The main game interface and dashboard.
 * **main.css:** The styling, layout, and responsive design (Dark/Light mode).
 * **main.js:** The core game logic and the Minimax AI implementation.
 
