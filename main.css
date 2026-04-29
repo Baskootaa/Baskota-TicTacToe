@@ -45,6 +45,7 @@ body {
     width: 100vw;
     overflow: hidden;
     transition: background 0.3s ease;
+    padding-bottom: 80px; /* بيعمل مساحة فاضية تحت خالص عشان الزرار يظهر */
 }
 
 /* --- 2. الهيكل الرئيسي (Layout) --- */
